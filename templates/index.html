@@ -1,213 +1,294 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Processo de Alocação de Vagas</title>
+  <link href="[fonts.googleapis.com](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap)" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <title>Alocação de Vagas</title>
+    body {
+      font-family: "Inter", sans-serif;
+      background: #f4f7fb;
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    /* ---------- CABEÇALHO ---------- */
+    .hero {
+      background: linear-gradient(135deg, #002b68 0%, #003f8c 100%);
+      color: #fff;
+      text-align: center;
+      padding: 38px 24px 78px;
+      position: relative;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  .hero {
+    position: relative;
+    overflow: hidden;
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
+/* Brasão da direita */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    width: 500px;
+    height: 500px;
+    background: url("/static/brasao.png") center/contain no-repeat;
+    opacity: 0.25;
+}
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+/* Brasão da esquerda */
+.hero::after {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 40px;
+    width: 320px;
+    height: 320px;
+    background: url("/static/brasao.png") center/contain no-repeat;
+    opacity: 0.12;
+}
 
-            background:
-                linear-gradient(135deg,
-                    #000000 0%,
-                    #1a0000 45%,
-                    #100101 75%,
-                    #2e2525 100%);
+    .hero h2 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      position: relative;
+    }
 
-            padding: 30px;
-        }
+    .hero .estado {
+      font-size: 15px;
+      letter-spacing: 5px;
+      margin-top: 4px;
+      opacity: .9;
+      position: relative;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 750px;
+    .barras {
+      width: 110px;
+      height: 7px;
+      margin: 14px auto 0;
+      border-radius: 50px;
+      background: linear-gradient(90deg,
+        #fff 0 33%, #d21f26 33% 66%, #111 66% 100%);
+      position: relative;
+    }
 
-            background: white;
+    .hero h1 {
+      font-size: 46px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-top: 26px;
+      position: relative;
+    }
 
-            border-radius: 24px;
+    .hero p {
+      margin: 16px auto 0;
+      font-size: 17px;
+      max-width: 560px;
+      opacity: .95;
+      position: relative;
+    }
 
-            padding: 40px;
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 60px;
+      background: #f4f7fb;
+      clip-path: polygon(0 0, 50% 100%, 100% 0, 100% 100%, 0 100%);
+    }
 
-            box-shadow:
-                0 20px 60px rgba(0, 0, 0, .20);
-        }
+    /* ---------- CORPO ---------- */
+    .container {
+      max-width: 760px;
+      margin: -34px auto 0;
+      padding: 0 20px;
+      position: relative;
+      z-index: 10;
+    }
 
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .alerta {
+      background: #eef4ff;
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
 
-        .logo img {
-            max-width: 120px;
-        }
+    .alerta::before {
+      content: "";
+      flex: 0 0 4px;
+      align-self: stretch;
+      background: #1f4fa8;
+      border-radius: 4px;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
+    .alerta-icon { font-size: 32px; line-height: 1; }
 
-        .header h1 {
-            color: #0f172a;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
+    .alerta-texto {
+      font-size: 17px;
+      font-weight: 500;
+      color: #1e293b;
+    }
 
-        .header p {
-            color: #64748b;
-            font-size: 15px;
-        }
+    .upload-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin-bottom: 18px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .05);
+      transition: .25s;
+    }
 
-        .upload-box {
-            border: 2px dashed #dbe2ea;
-            border-radius: 18px;
+    .upload-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, .08);
+    }
 
-            padding: 20px;
+    .upload-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #012b63;
+      font-size: 25px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
 
-            margin-bottom: 18px;
+    .upload-area {
+      border: 2px dashed #d6dce5;
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-            transition: all .3s ease;
-        }
+    .upload-area .arquivo-icone {
+      font-size: 26px;
+      color: #94a3b8;
+      flex: 0 0 auto;
+    }
 
-        .upload-box:hover {
-            border-color: #2563eb;
-            background: #f8fbff;
-            transform: translateY(-2px);
-        }
+    input[type=file] {
+      flex: 1;
+      font-family: inherit;
+      font-size: 15px;
+      color: #334155;
+    }
 
-        .upload-box label {
-            display: block;
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 10px;
-        }
+    input[type=file]::file-selector-button {
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: #012b63;
+      background: #e8f0fb;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 20px;
+      margin-right: 14px;
+      cursor: pointer;
+      transition: .2s;
+    }
 
-        input[type=file] {
-            width: 100%;
-            cursor: pointer;
-        }
+    input[type=file]::file-selector-button:hover { background: #d8e6fa; }
 
-        .botao {
-            width: 100%;
-            border: none;
+    .botao {
+      width: 100%;
+      height: 68px;
+      border: none;
+      border-radius: 16px;
+      font-family: inherit;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(135deg, #003b8d, #00275d);
+      transition: .25s;
+      margin-top: 8px;
+    }
 
-            height: 58px;
+    .botao:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(0, 42, 110, .30);
+    }
 
-            border-radius: 14px;
+    .erro {
+      margin-top: 22px;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 18px;
+      border-radius: 14px;
+      border-left: 5px solid #dc2626;
+      font-size: 15px;
+    }
 
-            background:
-                linear-gradient(135deg,
-                    #06070a,
-                    #170a07);
-
-            color: white;
-
-            font-size: 17px;
-            font-weight: 600;
-
-            cursor: pointer;
-
-            transition: .3s;
-        }
-
-        .botao:hover {
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 10px 30px rgba(3, 4, 6, 0.4);
-        }
-
-        .erro {
-            margin-top: 20px;
-            padding: 15px;
-
-            border-radius: 12px;
-
-            background: #fee2e2;
-            color: #b91c1c;
-
-            border-left: 5px solid #dc2626;
-        }
-
-        .info {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 25px;
-
-            color: #475569;
-            font-size: 14px;
-        }
-    </style>
-
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 34px; }
+      .hero h2 { font-size: 24px; }
+      .hero p  { font-size: 15px; }
+      .upload-title { font-size: 21px; }
+      .botao { font-size: 19px; height: 60px; }
+    }
+  </style>
 </head>
 
 <body>
+  <section class="hero">
+    <h2>POLÍCIA MILITAR</h2>
+    <div class="estado">ESTADO DE SÃO PAULO</div>
+    <div class="barras"></div>
+    <h1>Processo de<br>Alocação de Vagas</h1>
+    <p>Automatização do processo em Python para alocação de vagas da Polícia Militar - SP.</p>
+  </section>
 
-    <div class="container">
-
-        <!-- LOGO (opcional) -->
-        <!--
-    <div class="logo">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
-    </div>
-    -->
-
-        <div class="header">
-            <h1>Processo de alocação de Vagas</h1>
-            <p>Automatização de processos em Python para locação de vagas da Polícia Militar - SP</p>
-        </div>
-
-        <div class="info">
-            Certifique-se de anexar os três arquivos atualizados antes de realizar o processamento.
-        </div>
-
-        <form method="POST" enctype="multipart/form-data">
-
-            <div class="upload-box">
-                <label>🏆 Classificação</label>
-                <input type="file" name="classificacao" accept=".xlsx" required>
-            </div>
-
-            <div class="upload-box">
-                <label>📝 Escolha dos Alunos</label>
-                <input type="file" name="escolhas" accept=".xlsx" required>
-            </div>
-
-            <div class="upload-box">
-                <label>🏢 Vagas Disponíveis</label>
-                <input type="file" name="vagas" accept=".xlsx" required>
-            </div>
-
-            <button type="submit" class="botao">
-                ⚙️ Gerar Prévia
-            </button>
-
-        </form>
-
-        {% if erro %}
-        <div class="erro">
-            <strong>Erro:</strong> {{ erro }}
-        </div>
-        {% endif %}
-
+  <div class="container">
+    <div class="alerta">
+      <div class="alerta-icon">🛡️</div>
+      <div class="alerta-texto">Anexe os três arquivos antes de iniciar o processamento.</div>
     </div>
 
+    <form method="POST" enctype="multipart/form-data">
+      <div class="upload-card">
+        <div class="upload-title">🏆 Classificação</div>
+        <div class="upload-area">
+          <span class="arquivo-icone">📄</span>
+          <input type="file" name="classificacao" accept=".xlsx" required>
+        </div>
+      </div>
+
+      <div class="upload-card">
+        <div class="upload-title">🎓 Escolhas dos Alunos</div>
+        <div class="upload-area">
+          <span class="arquivo-icone">📄</span>
+          <input type="file" name="escolhas" accept=".xlsx" required>
+        </div>
+      </div>
+
+      <div class="upload-card">
+        <div class="upload-title">🏢 Vagas Disponíveis</div>
+        <div class="upload-area">
+          <span class="arquivo-icone">📄</span>
+          <input type="file" name="vagas" accept=".xlsx" required>
+        </div>
+      </div>
+
+      <button type="submit" class="botao">⚙️ Gerar Prévia</button>
+    </form>
+
+    {% if erro %}
+      <div class="erro"><strong>Erro:</strong> {{ erro }}</div>
+    {% endif %}
+  </div>
 </body>
-
 </html>
